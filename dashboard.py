@@ -5,6 +5,7 @@ from streamlit_dynamic_filters import DynamicFilters
 
 # Configurar o layout da página
 st.set_page_config(layout="wide")
+st.title("Isto é um teste de Filtros!")
 
 # Carregar os dados do arquivo "vendas.csv" (certifique-se de que o arquivo está no mesmo diretório)
 df = pd.read_csv("Dados_2012_1_2023_1_DC.csv", sep=",")
