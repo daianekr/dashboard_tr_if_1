@@ -8,6 +8,7 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 from streamlit_dynamic_filters import DynamicFilters
+import plotly.graph_objs as go
 
 # Configurar o layout da página
 st.set_page_config(layout="wide")
@@ -92,7 +93,27 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 # Carregar os dados do arquivo "vendas.csv" (certifique-se de que o arquivo está no mesmo diretório)
 df = pd.read_csv("Dados_2012_1_2023_1_DC.csv", sep=",")
 
-st.dataframe(filter_dataframe(df))
+filtered = filter_dataframe(df)
+
+st.dataframe(filtered)
+
+col1, col2 = st.columns(2) # Primeira linha com duas colunas
+col3, col4, col5 = st.columns(3) # Segunda linha com três colunas
+
+# Count the occurrences of each category
+category_counts = filtered['Situação da Matrícula'].value_counts()
+
+# Create the Plotly bar chart
+fig = go.Figure(data=[go.Bar(x=category_counts.index, y=category_counts.values)])
+
+# Update layout
+fig.update_layout(title='Contagem por Situação da Matrícula',
+                  xaxis_title='Situação da Matrícula',
+                  yaxis_title='Contagem de Alunos')
+
+
+# Exibir o gráfico na primeira coluna
+col1.plotly_chart(fig, use_container_width=True)
 
 # dynamic_filters = DynamicFilters(df=df, filters=['Instituicao', 'Descricao_Curso','Semestre_Ini','Semestre_fim'])
                                  
