@@ -15,15 +15,6 @@ st.set_page_config(layout="wide")
 st.title("Isto é um teste de Filtros!")
 
 def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Adds a UI on top of a dataframe to let viewers filter columns
-
-    Args:
-        df (pd.DataFrame): Original dataframe
-
-    Returns:
-        pd.DataFrame: Filtered dataframe
-    """
     modify = st.checkbox("Adicionar Filtros")
 
     if not modify:
