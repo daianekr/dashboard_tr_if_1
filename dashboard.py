@@ -104,7 +104,7 @@ fig.update_layout(title='Contagem por Situação da Matrícula',
 
 
 # Exibir o gráfico na primeira coluna
-col1.plotly_chart(fig, use_container_width=True)
+col2.plotly_chart(fig, use_container_width=True)
 
 # dynamic_filters = DynamicFilters(df=df, filters=['Instituicao', 'Descricao_Curso','Semestre_Ini','Semestre_fim'])
                                  
