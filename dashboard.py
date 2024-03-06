@@ -106,6 +106,33 @@ fig.update_layout(title='Contagem por Situação da Matrícula',
 # Exibir o gráfico na primeira coluna
 col2.plotly_chart(fig, use_container_width=True)
 
+count_instituicoes = filtered['Instituição'].value_counts()
+
+# Criando o gráfico de pizza com Plotly
+fig1 = px.pie(count_instituicoes, values=count_instituicoes.values, names=count_instituicoes.index, title='Distribuição de Instituições',hole=.3)
+
+col1.plotly_chart(fig1, use_container_width=True)
+
+# Count the occurrences of each category
+course_counts = filtered['Nome do Curso'].value_counts()
+
+# Create the Plotly bar chart
+fig2 = go.Figure(data=[go.Bar(x=course_counts.index, y=course_counts.values)])
+
+# Update layout
+fig2.update_layout(title='Contagem De Cursos',
+                  xaxis_title='Nome do Curso',
+                  yaxis_title='Contagem')
+
+fig2.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+# Exibir o gráfico na primeira coluna
+col3.plotly_chart(fig2, use_container_width=True)
+
+
+
+
+# Lista para armazenar os gráficos de barras
+
 # dynamic_filters = DynamicFilters(df=df, filters=['Instituicao', 'Descricao_Curso','Semestre_Ini','Semestre_fim'])
                                  
 # dynamic_filters.display_filters(location='sidebar')
