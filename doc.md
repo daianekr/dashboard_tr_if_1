@@ -1,4 +1,11 @@
-# Configurando um ambiente Python (env):
+# Criando Ambientes Python e versionando código com o Git e Github via VSCode 🐍
+
+
+Essa Documentação tem o objetivo de demonstrar o processo de criação de um ambiente de desenvolvimento para Python, bem como o uso do Git e Github para versionamento de código. Também mostra algumas dicas de como utilizar o Streamlit para geração de visualizações de dados. 
+
+
+
+## Configurando um ambiente Python (env):
 
 1. Qual a importância de ter um ambiente Python criado no diretório do seu projeto?
 
@@ -8,7 +15,8 @@ Outro ponto é que em alguns projetos, utlizamos uma versão específica do Pyth
 
 Estamos partindo do ponto em que o Python esteja corretamente instalado em sua máquina, para isso é fácil verificar abrindo um novo prompt de comando e digitar: python ou python3, vai depender do Sistema Operacional utilizado. Se estiver tudo certo, a versão mais recente do Python instalado em sua máquina, vai ser vista na resposta à linha de comando, assim: 
 
-![Versão do Python](img/python-version.png)
+<img src="img/python-version.png" width="500">
+
 
 No momento que escrevo esse texto a versão mais atual do Python é a 3.12 (que é a que estou usando aqui).
 
@@ -24,22 +32,25 @@ Na documentação do Git existe um passo a passo de como configurá-lo, o proces
 
 [Configurando o git!](https://git-scm.com/book/pt-br/v2/Come%C3%A7ando-Configura%C3%A7%C3%A3o-Inicial-do-Git)
 
-Caso dê tudo certo com aconfiguração, conseguimos checar via prompt de comando, digitando: git config --list
+Caso dê tudo certo com aconfiguração, conseguimos checar via prompt de comando, digitando: 
 
-![Git COnfigurado](img/git-config.png)
+```bash
+git config --list
+```
+<img src="img/git-config.png" width="500">
 
 Agora já podemos nos comunicar com a nossa conta do Github.
 
 Esse [artigo](https://www.alura.com.br/artigos/o-que-e-git-github?utm_term=&utm_campaign=&utm_source=adwords&utm_medium=ppc&hsa_acc=7964138385&hsa_cam=20946398532&hsa_grp=153091871930&hsa_ad=688089973825&hsa_src=g&hsa_tgt=dsa-2258482181163&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gad_source=1&gclid=CjwKCAiA0bWvBhBjEiwAtEsoW0t-PSP9Mgd-F3tu1thxSKX7ocPFAqc4HAv6zHXtgc62runFJpf9-RoCcg8QAvD_BwE) é bem interessante para entender como essa comunicação é feita. 
 
-Bom, existem várias maneiras de criar um repositório e ir versionanmento o código. Eu vou mostrar uma bem simples e que funcionará para o que queremos fazer. 
+Bom, existem várias maneiras de criar um repositório e ir versionando o código. Eu vou mostrar uma bem simples e que funcionará para o que queremos fazer. 
 
 1. Crie um repositório diretamente na interface do [Github](https://docs.github.com/pt/repositories/creating-and-managing-repositories/quickstart-for-repositories). 
  - Você vai entrar em sua conta e criar esse repositório vazio (como no tutorial da documentação do Github acima), com um arquivo readme e eu recomendo que deixe esse repositósio privado. Vamos trabalhar com dados e provavelmente dados sensíveis que não queremos expor (ainda). 
 
  - Como o repositório criado, vamos clonar o repositório vazio para nossa máquina com o comando: git clone <link do repositório criado>. Você vai acessar o link HTTPS do repositório pela interface do Github. Assim:
 
- ![Link do Repositório](img/link-repositorio.png)
+ <img src="img/link-repositorio.png" width="500">
 
  Há várias maneiras de fazer esse clone do projeto, via HTTPS como aqui, via SSH, via CLI, via github desktop. Esse mostrado aqui funciona bem e não é complexo. 
 
@@ -76,14 +87,13 @@ nome_ambiente_virtual/Scripts/Activate
 
 Se o ambiente virtual for ativado com sucesso, será possível ver no terminal o nome_ambiente_virtual entre parênteses, assim, por exemplo: 
 
- ![Ambiente Virtual ativado](img/venv-ativada.png)
-
+ <img src="img/venv-ativada.png" width="500">
 
 ## Gerenciando pacotes usados no seu projeto: 
 
 Uma maneira simples de gerenciar todos os pacotes Python que utilizará em seu projeto, é criando um arquivo e o renomeando para requirements.txt. Desse maneira, você pode simplesmente listar todos os pacotes que quer instalar. 
 
- ![Exemplo de Arquivo de requirements.txt](img/requirements.png)
+ <img src="img/requirements.png" width="500">
 
  Você também pode especificar o versão do pacote que está usando. Aqui você pode ir atualizando os pacotes conforme for precisando/criando novos. 
 
@@ -108,21 +118,87 @@ Aguarde a instalação. E o ambiente estará pronto pra uso.
 
 Uma maneira fácil de salvar as alterações do seu arquivo via git dentro do próprio VSCode é ir em controle de código:
 
- ![Controle de Código do VSCode](img/controle-de-codigo.png)
+  <img src="img/controle-de-codigo.png" width="500">
 
  1. Digitar a mensagem daquele commit (obrigatório), 
  2. clicar no botão de Preparar todas as alterações (obrigatório),
  3. clicar em Confirmação (nesse ponto todos as alterações estão preparadas para "subir" para o Github)
- 
 
-![Alterações preparadas](img/prepara-alteracoes.png)
+
+ <img src="img/prepara-alteracoes.png" width="500">
 
 4. ir em Modos de Exibição e Mais ações (mais conhecido como 3 pontinhos rs) e clicar em Enviar por push. 
 
-![Enviar por Push](img/envia-por-push.png)
+ <img src="img/envia-por-push.png" width="500">
 
 Pronto! Suas alterações estarão todos no seu repositório do Github. 
 
+## A Biblioteca Streamlit:
+
+Podemos criar uma aplicação em minutos usando o Python com o apoio da biblioteca [Streamlit](https://streamlit.io/). Ela também permite processo de deploy facilitado via Github. 
+
+ <img src="img/streamlit.png" width="500">
+
+Para começar a usar, precisamos instalar (pode ser via requirements que vimos acima) ou fazendo a instalação diretamente do terminal. 
+
+Linux e MAC:
+
+```bash
+
+pip3 install streamlit
+
+```
+
+Windows:
+
+```bash
+
+pip install streamlit
+
+```
+
+Para começar a usar, crie um arquivo que atuará como sua main, e vá criando seus códigos e visualizações nesse arquivo. Nesse exemplo, eu criei o arquivo com o nome dashboard.py, e nele fiz a importação das bibliotecas e as visualizações que eu queria ver. 
+
+ <img src="img/arquivo-principal.png" width="500">
+
+
+Nesse exemplo foi usado o [Pandas](https://pandas.pydata.org/), o [Streamlit](https://streamlit.io/), o [Plotly](https://plotly.com/). A documentação é bem vasta e com bastante exemplos prontos pra uso, necessitando das alterações que façam sentido no seu projeto. 
+
+Nesse exemplo abaixo, é gerado um título e a leitura de uma DataFrame com sua vizualização: 
+
+```python 
+
+from pandas.api.types import (
+    is_categorical_dtype,
+    is_datetime64_any_dtype,
+    is_numeric_dtype,
+    is_object_dtype,
+)
+import pandas as pd
+import streamlit as st
+import plotly.express as px
+from streamlit_dynamic_filters import DynamicFilters
+import plotly.graph_objs as go
+
+
+st.set_page_config(layout="wide")
+st.title("Hello World! 🌞")
+
+df = pd.read_csv("seus_dados_em_csv_aqui.csv", sep=",")
+
+st.dataframe(df)
+
+```
+
+se salvamos o arquivo, e rodarmos no terminal da nossa venv o comando:
+
+```bash
+
+streamlit run dashboard.py   
+
+```
+
+Ele vai executar e já abrir no navegador localmente sua nova página criada com Python. 
 
 
 
