@@ -104,14 +104,24 @@ pip install -r requirements.txt
 
 Aguarde a instalação. E o ambiente estará pronto pra uso. 
 
+## Controle de Código Via Interface do VSCode: 
+
 Uma maneira fácil de salvar as alterações do seu arquivo via git dentro do próprio VSCode é ir em controle de código:
 
  ![Controle de Código do VSCode](img/controle-de-codigo.png)
 
  1. Digitar a mensagem daquele commit (obrigatório), 
  2. clicar no botão de Preparar todas as alterações (obrigatório),
- 3. clicar em Confirmação
- 4. 
+ 3. clicar em Confirmação (nesse ponto todos as alterações estão preparadas para "subir" para o Github)
+ 
+
+![Alterações preparadas](img/prepara-alteracoes.png)
+
+4. ir em Modos de Exibição e Mais ações (mais conhecido como 3 pontinhos rs) e clicar em Enviar por push. 
+
+![Enviar por Push](img/envia-por-push.png)
+
+Pronto! Suas alterações estarão todos no seu repositório do Github. 
 
 
 
