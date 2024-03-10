@@ -1,6 +1,6 @@
 # Configurando um ambiente Python (env):
 
-1 - Qual a importância de ter um ambiente Python criado no diretório do seu projeto?
+1. Qual a importância de ter um ambiente Python criado no diretório do seu projeto?
 
 A resposta mais simples é: isolar o ambiente criado de todo o ecossistema Python que existe na sua máquina. Fazemos isso porque projetos diferem entre si e utilizam bibliotecas diferentes para cada finalidade. Portanto, não seria necessário, por exemplo, tem uma biblioteca voltada para Ciência de Dados em um diretório/repositório em que estamos trabalhando com Análise de Dados. 
 
@@ -43,9 +43,79 @@ Bom, existem várias maneiras de criar um repositório e ir versionanmento o có
 
  Há várias maneiras de fazer esse clone do projeto, via HTTPS como aqui, via SSH, via CLI, via github desktop. Esse mostrado aqui funciona bem e não é complexo. 
 
- ## Criando o Ambiente Python para o Projeto. 
+ ## Criando o Ambiente Virtual Python para o Projeto. 
 
- 
+ Para criar um ambiente Python, abra o seu projeto dentro do VSCode, abra um novo terminal pelo próprio VSCode e rode o comando*:
+
+ *nome_ambiente_virtual vai ser o nome do seu ambiente. Ex: env, venv, venv_nomedoprojeto. 
+
+ substitua nome_ambiente_virtual, pelo nome do ambiente que você quer criar. 
+
+
+```bash
+
+python3 -m venv nome_ambiente_virtual
+
+```
+
+
+com o ambiente criado, precisaremos ativá-lo. Ainda no terminal do próprio VSCode, vamos ativar o ambiente com um comando específico para cada SO. 
+
+No MAC ou Linux: 
+
+```bash
+source nome_ambiente_virtual/bin/activate
+
+```
+
+No Windows:
+
+```bash
+nome_ambiente_virtual/Scripts/Activate
+```
+
+Se o ambiente virtual for ativado com sucesso, será possível ver no terminal o nome_ambiente_virtual entre parênteses, assim, por exemplo: 
+
+ ![Ambiente Virtual ativado](img/venv-ativada.png)
+
+
+## Gerenciando pacotes usados no seu projeto: 
+
+Uma maneira simples de gerenciar todos os pacotes Python que utilizará em seu projeto, é criando um arquivo e o renomeando para requirements.txt. Desse maneira, você pode simplesmente listar todos os pacotes que quer instalar. 
+
+ ![Exemplo de Arquivo de requirements.txt](img/requirements.png)
+
+ Você também pode especificar o versão do pacote que está usando. Aqui você pode ir atualizando os pacotes conforme for precisando/criando novos. 
+
+ Para instalar, salve o arquivo (ctrl+S/cmd+S), e rode o comando a seguir, no mesmo terminal já aberto anteriormente e com a venv ativada! Isso vai garantir que todos os seus pacotes estarão sendo instalados somente nesse ambiente e que nenhum outro ambiente do seu Python local será afetado por eles. 
+
+MAC ou Linux: 
+
+
+```bash
+pip3 install -r requirements.txt
+```
+
+No Windows:
+
+```bash
+pip install -r requirements.txt
+```
+
+Aguarde a instalação. E o ambiente estará pronto pra uso. 
+
+Uma maneira fácil de salvar as alterações do seu arquivo via git dentro do próprio VSCode é ir em controle de código:
+
+ ![Controle de Código do VSCode](img/controle-de-codigo.png)
+
+ 1. Digitar a mensagem daquele commit (obrigatório), 
+ 2. clicar no botão de Preparar todas as alterações (obrigatório),
+ 3. clicar em Confirmação
+ 4. 
+
+
+
+
 
 
 
