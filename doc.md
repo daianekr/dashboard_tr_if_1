@@ -20,6 +20,8 @@ Estamos partindo do ponto em que o Python esteja corretamente instalado em sua m
 
 No momento que escrevo esse texto a versão mais atual do Python é a 3.12 (que é a que estou usando aqui).
 
+
+
 ## Criando um repositório: 
 
 Vamos criar um repositório para guardar todo o progresso e conseguir fazer o versionamento do nosso código. Utilizo o git, mas existem outras ferramentas para o mesmo propósito. 
