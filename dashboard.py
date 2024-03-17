@@ -7,12 +7,19 @@ from pandas.api.types import (
 import pandas as pd
 import streamlit as st
 import plotly.express as px
-from streamlit_dynamic_filters import DynamicFilters
 import plotly.graph_objs as go
+from streamlit_dynamic_filters import DynamicFilters
+
 
 
 st.set_page_config(layout="wide")
-st.title("Isto é um teste de Filtros! 🌞")
+st.title("🚧 Site em construção 🚧")
+
+st.markdown(
+    """
+    # Este é um teste de filtros! 🎮
+    """
+)
 
 def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     modify = st.checkbox("Adicionar Filtros")

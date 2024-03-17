@@ -4,3 +4,4 @@ plotly-express
 watchdog
 streamlit-dynamic-filters
 streamlit-echarts 
+nbformat
