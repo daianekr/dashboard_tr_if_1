@@ -9,20 +9,23 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objs as go
 from streamlit_dynamic_filters import DynamicFilters
+from streamlit_card import card
 
 
+st.set_page_config(page_title="Scholar Analytics Dashboard", page_icon=":bar_chart:", layout="wide")
 
-st.set_page_config(layout="wide")
-st.title("🚧 Site em construção 🚧")
+st.title("Scholar Analytics Dashboard")
 
-st.markdown(
-    """
-    # Este é um teste de filtros! 🎮
-    """
-)
+st.markdown("_Protótipo v0.0.1_")
+
+# st.markdown(
+#     """
+#     # Este é um teste de filtros! 🎮
+#     """
+# )
 
 def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
-    modify = st.checkbox("Adicionar Filtros")
+    modify = st.sidebar.checkbox("Adicionar Filtros")
 
     if not modify:
         return df
@@ -40,7 +43,7 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
         if is_datetime64_any_dtype(df[col]):
             df[col] = df[col].dt.tz_localize(None)
 
-    modification_container = st.container()
+    modification_container = st.sidebar.container()
 
     with modification_container:
         to_filter_columns = st.multiselect("Filtrar pela Coluna: ", df.columns)
@@ -88,16 +91,64 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-
 df = pd.read_csv("Dados_2012_1_2023_1_DC.csv", sep=",")
 
-filtered = filter_dataframe(df)
+df['Nome do Curso - Sem Código'] = df['Nome do Curso'].str.split(' - ').str[1]
 
-st.dataframe(filtered)
+def month_delta(date1, date2):
+    return (date1.year - date2.year) * 12 + date1.month - date2.month
+
+df['Semestre Início'] = pd.to_datetime(df['Semestre Início'])
+df['Semestre Fim'] = pd.to_datetime(df['Semestre Fim'])
+df['Tempo no curso em Meses'] = df.apply(lambda row: month_delta(row['Semestre Fim'], row['Semestre Início']), axis=1)
+# df['Tempo no curso em Meses'] = (df['Semestre Fim'].dt.to_period('M') - df['Semestre Início'].dt.to_period('M')).astype(int)
+
+# Create a sidebar
+st.sidebar.title('Seus filtros estão aqui! ✅')
+
+# Add a card inside the sidebar
+with st.sidebar:
+    st.write("É possível aplicar quantos filtros quiser")   
+    st.write("Os filtros são as colunas do DataFrame")
+
+
+filtered = filter_dataframe(df)
+with st.expander("Mostrar Dados Filtrados"):
+    st.dataframe(filtered)
 
 col1, col2 = st.columns(2) # Primeira linha com duas colunas
-col3, col4, col5 = st.columns(3) # Segunda linha com três colunas
+col3, col4 = st.columns(2) # Segunda linha com três colunas
+col5, col6 = st.columns(2) # Terceira linha com três colunas
 
+
+
+
+
+res = card(
+    title="Streamlit Card",
+    text=["This is a test card", "This is a subtext"],
+    image="https://placekitten.com/500/500",
+)
+
+
+
+fig_1 = go.Figure()
+
+fig_1.add_trace(
+    go.Indicator(
+        value=filtered.count()[0],
+        gauge={"axis": {"visible": False}},
+        number={
+            "font.size": 28,
+        },
+        title={
+            "text": "Total de Alunos",
+            "font": {"size": 24},
+        },
+    )
+)
+
+col1.plotly_chart(fig_1, use_container_width=True)
 
 category_counts = filtered['Situação da Matrícula'].value_counts()
 
@@ -105,33 +156,46 @@ category_counts = filtered['Situação da Matrícula'].value_counts()
 fig = go.Figure(data=[go.Bar(x=category_counts.index, y=category_counts.values)])
 
 
-fig.update_layout(title='Contagem por Situação da Matrícula',
-                  xaxis_title='Situação da Matrícula',
-                  yaxis_title='Contagem de Alunos')
+fig.update_layout(title='Total de Alunos por Situação da Matrícula')
 
 
 
-col2.plotly_chart(fig, use_container_width=True)
+col3.plotly_chart(fig, use_container_width=True)
 
 count_instituicoes = filtered['Instituição'].value_counts()
 
 fig1 = px.pie(count_instituicoes, values=count_instituicoes.values, names=count_instituicoes.index, title='Distribuição de Instituições',hole=.3)
 
-col1.plotly_chart(fig1, use_container_width=True)
+col2.plotly_chart(fig1, use_container_width=True)
 
 
-course_counts = filtered['Nome do Curso'].value_counts()
+course_counts = filtered['Nome do Curso - Sem Código'].value_counts()
 
 fig2 = go.Figure(data=[go.Bar(x=course_counts.index, y=course_counts.values)])
 
 
-fig2.update_layout(title='Contagem De Cursos',
-                  xaxis_title='Nome do Curso',
-                  yaxis_title='Contagem')
+fig2.update_layout(title='Total de Alunos por Curso')
 
 fig2.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
 
-col3.plotly_chart(fig2, use_container_width=True)
+col4.plotly_chart(fig2, use_container_width=True)
+
+y_counts = filtered.loc[(filtered['Sexo']=='M')].groupby('Instituição').size().tolist()
+z_counts = filtered.loc[(filtered['Sexo']=='F')].groupby('Instituição').size().tolist()
+
+fig3 = go.Figure(
+    data=[
+        go.Bar(x=filtered['Instituição'], y=y_counts, name="Feminino"),
+        go.Bar(x=filtered['Instituição'], y=z_counts, name="Masculino")
+    ],
+    layout=dict(
+        barcornerradius=15,
+    ),
+)
+
+col5.plotly_chart(fig3, use_container_width=True)
+
+
 
 
 
