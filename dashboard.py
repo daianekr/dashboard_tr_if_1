@@ -94,7 +94,7 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 df = pd.read_csv("Dados_2012_1_2023_1_DC.csv", sep=",")
 
 df['Nome do Curso - Sem Código'] = df['Nome do Curso'].str.split(' - ').str[1]
-
+df['Semestre de Início'] = df['Semestre Início'].str.replace('/1', 'º semestre de')
 def month_delta(date1, date2):
     return (date1.year - date2.year) * 12 + date1.month - date2.month
 
@@ -126,8 +126,7 @@ col5, col6 = st.columns(2) # Terceira linha com três colunas
 
 res = card(
     title="Streamlit Card",
-    text=["This is a test card", "This is a subtext"],
-    image="https://placekitten.com/500/500",
+    text=["This is a test card", "This is a subtext"]
 )
 
 
