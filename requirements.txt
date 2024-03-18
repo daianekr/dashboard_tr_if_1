@@ -5,3 +5,4 @@ watchdog
 streamlit-dynamic-filters
 streamlit-echarts 
 nbformat
+streamlit_card
