@@ -6,3 +6,11 @@ streamlit-dynamic-filters
 streamlit-echarts 
 nbformat
 streamlit_card
+langchain 
+openai
+python-environ 
+tabulate
+openpyxl
+ezodf
+lxml
+odfpy
