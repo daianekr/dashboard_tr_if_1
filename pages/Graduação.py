@@ -16,7 +16,7 @@ st.markdown("# Dados Graduação")
 st.sidebar.markdown("# Dados Graduação")
 
 
-st.markdown("## Relatório Analítico Escolar")
+st.markdown("### Relatório Analítico Escolar")
 
 st.markdown("_Protótipo v0.0.1_")
 
@@ -43,7 +43,6 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
 
     for col in df.columns:
-        # Verifica se a coluna parece representar datas antes de tentar converter
         if is_object_dtype(df[col]) and df[col].str.contains(r'\d{4}/\d{2}').all():
             try:
                 df[col] = pd.to_datetime(df[col])
@@ -258,17 +257,32 @@ fig_6 = go.Figure(data=[go.Bar(x=course_counts.index, y=course_counts.values)])
 fig_6.update_layout(title='Total de Alunos por Curso', xaxis_tickangle=-45)
 fig_6.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
 
-y_counts = filtered.loc[(filtered['Sexo']=='M')].groupby('Instituição').size().tolist()
-z_counts = filtered.loc[(filtered['Sexo']=='F')].groupby('Instituição').size().tolist()
+male_counts = filtered.loc[filtered['Sexo'] == 'M'].groupby('Instituição').size()
+female_counts = filtered.loc[filtered['Sexo'] == 'F'].groupby('Instituição').size()
 
+# Garantir que ambas as séries tenham o mesmo índice (instituições)
+institutions = sorted(set(male_counts.index).union(set(female_counts.index)))
+
+# Preencher com 0 onde não houver registros
+male_counts = male_counts.reindex(institutions, fill_value=0)
+female_counts = female_counts.reindex(institutions, fill_value=0)
+
+# Criar o gráfico
 fig_7 = go.Figure(
     data=[
-        go.Bar(x=filtered['Instituição'], y=y_counts, name="Feminino"),
-        go.Bar(x=filtered['Instituição'], y=z_counts, name="Masculino")
-    ],
-    layout=dict(
-        barcornerradius=15,
-    ),
+        go.Bar(x=institutions, y=female_counts, name="Feminino", marker_color='rgb(255, 105, 180)'),  # Rosa para Feminino
+        go.Bar(x=institutions, y=male_counts, name="Masculino", marker_color='rgb(65, 105, 225)'),   # Azul para Masculino
+    ]
+)
+
+# Layout com cantos arredondados e ajustes de visualização
+fig_7.update_layout(
+    title='Distribuição de Matrículas por Instituição e Sexo',
+    xaxis_title='Instituição',
+    yaxis_title='Número de Matrículas',
+    barmode='group',  # Barras lado a lado
+    bargap=0.2,
+    bargroupgap=0.1,
 )
 
 with col5[0]:

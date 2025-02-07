@@ -8,9 +8,8 @@ from pandas.api.types import (
     is_object_dtype,
 )
 
-st.markdown("# Dashboard IFES 🎈")
-st.sidebar.markdown("# Página Principal dos dashboards 🎈")
-st.markdown("## Dados Históricos do cursos Técnicos do IFES")
+st.markdown("# Instituto Federal do Espírito Santo")
+st.markdown("### Dados Históricos do cursos Técnicos do IFES")
 
 def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     modify = st.sidebar.checkbox("Adicionar Filtros")
@@ -80,13 +79,8 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
 
 df = pd.read_csv("data/Dados.csv", sep=';', encoding='latin1')
-
+        
 st.sidebar.title('Seus filtros estão aqui! ✅')
-
-with st.sidebar:
-    st.write("É possível aplicar quantos filtros quiser")   
-    st.write("Os filtros são as colunas do DataFrame")
-
 
 filtered = filter_dataframe(df)
 with st.expander("Mostrar Dados Filtrados"):
@@ -220,11 +214,27 @@ fig_8.update_layout(
     legend=dict(x=0, y=1.0)
 )
 
-fig_9 = go.Figure()
-fig_9.add_trace(go.Pie(labels=filtered['Modalidade'].value_counts().index, values=filtered['Modalidade'].value_counts().values, name='Modalidade'))
+modalidade_counts = filtered['Modalidade'].value_counts()
+modalidade_percent = (modalidade_counts / modalidade_counts.sum()) * 100
+
+
+fig_9 = go.Figure(go.Bar(
+    x=modalidade_percent.values,              
+    y=modalidade_percent.index,               
+    orientation='h',                          
+    text=[f'{percent:.1f}%' for percent in modalidade_percent.values],  
+    textposition='outside',                   
+    marker_color='rgb(55, 83, 109)'           
+))
+
 
 fig_9.update_layout(
-    title='Distribuição de Matrículas por Modalidade'
+    title='Distribuição Percentual de Matrículas por Modalidade',
+    xaxis_title='Percentual (%)',
+    yaxis_title='Modalidade',
+    xaxis_tickformat='.1f',                   
+    yaxis=dict(autorange="reversed"),         
+    margin=dict(l=150, r=50, t=50, b=50),     
 )
 
 fig_10 = go.Figure()

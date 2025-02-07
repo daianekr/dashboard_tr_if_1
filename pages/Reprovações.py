@@ -8,8 +8,7 @@ from pandas.api.types import (
     is_object_dtype,
 )
 
-st.markdown("# Protótipo da Página 3 🎉")
-st.sidebar.markdown("# Página 3 🎉")
+st.markdown("# Dados de Reprovações")
 
 def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     modify = st.sidebar.checkbox("Adicionar Filtros")
@@ -20,7 +19,6 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
 
     for col in df.columns:
-        # Verifica se a coluna parece representar datas antes de tentar converter
         if is_object_dtype(df[col]) and df[col].str.contains(r'\d{4}/\d{2}').all():
             try:
                 df[col] = pd.to_datetime(df[col])
@@ -80,24 +78,20 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 df = pd.read_csv('data/Reprovacoes.csv', sep=';', encoding='utf-8') 
 st.sidebar.title('Seus filtros estão aqui! ✅')
 
-with st.sidebar:
-    st.write("É possível aplicar quantos filtros quiser")   
-    st.write("Os filtros são as colunas do DataFrame")
-
-
 filtered = filter_dataframe(df)
 with st.expander("Mostrar Dados Filtrados"):
     st.dataframe(filtered)
 
-col1, col2, col3, col4 = st.columns(4) 
-col5 = st.columns(1) 
-col6 = st.columns(1)
-col7 = st.columns(1)
-col8 = st.columns(1)
-col9 = st.columns(1)
-col10 = st.columns(1)
-col11 = st.columns(1)
-col12 = st.columns(1)
+col1, col2, col3, col4 = st.columns(4)
+col5, = st.columns(1)
+col6, = st.columns(1)
+col7, = st.columns(1)
+col8, = st.columns(1)
+col9, = st.columns(1)
+col10, = st.columns(1)
+col11, = st.columns(1)
+col12, = st.columns(1)
+
 
 filtro_alunos = filtered['Matrícula (Anom)'].unique()
 soma_valores_distintos = len(filtro_alunos)
@@ -241,7 +235,6 @@ df_agrupado = filtered.groupby(['Forma Ingresso', 'Situação Matrícula']).size
 
 df_pivot_1 = df_agrupado.pivot(index='Forma Ingresso', columns='Situação Matrícula', values='Contagem').fillna(0)
 
-# Criando o gráfico de barras empilhadas
 fig_11 = go.Figure()
 
 for situacao in df_pivot_1.columns:
@@ -281,31 +274,36 @@ fig_12.update_layout(
 
 
 
-col1.plotly_chart(fig_1, use_container_width=True)
-col2.plotly_chart(fig_2, use_container_width=True)
-col3.plotly_chart(fig_3, use_container_width=True)
-col4.plotly_chart(fig_4, use_container_width=True)
+# col5.plotly_chart(fig_5, use_container_width=True)
+# col6.plotly_chart(fig_6, use_container_width=True)
+# col7.plotly_chart(fig_7, use_container_width=True)
+# col8.plotly_chart(fig_8, use_container_width=True)
+# col9.plotly_chart(fig_9, use_container_width=True)
+# col10.plotly_chart(fig_10, use_container_width=True)
+# col11.plotly_chart(fig_11, use_container_width=True)
+# col12.plotly_chart(fig_12, use_container_width=True)
 
-with col5[0]:
+
+with col5:
     st.plotly_chart(fig_5, use_container_width=True)
 
-with col6[0]:
+with col6:
     st.plotly_chart(fig_6, use_container_width=True)
     
-with col7[0]:
+with col7:
     st.plotly_chart(fig_7, use_container_width=True)
     
-with col8[0]:
+with col8:
     st.plotly_chart(fig_8, use_container_width=True)
 
-with col9[0]:
+with col9:
     st.plotly_chart(fig_9, use_container_width=True)
 
-with col10[0]:
+with col10:
     st.plotly_chart(fig_10, use_container_width=True)
 
-with col11[0]:
+with col11:
     st.plotly_chart(fig_11, use_container_width=True)
 
-with col12[0]:
+with col12:
     st.plotly_chart(fig_12, use_container_width=True)

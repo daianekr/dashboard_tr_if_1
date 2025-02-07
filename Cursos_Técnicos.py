@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import plotly.graph_objects as go
 from pandas.api.types import (
     is_categorical_dtype,
@@ -7,10 +8,15 @@ from pandas.api.types import (
     is_numeric_dtype,
     is_object_dtype,
 )
+def wide_space_default():
+    st.set_page_config(layout='wide')
 
-st.markdown("# Dashboard IFES 🎈")
-st.sidebar.markdown("# Página Principal dos dashboards 🎈")
-st.markdown("## Dados Históricos do cursos Técnicos do IFES")
+wide_space_default()
+
+st.markdown("# Instituto Federal do Espírito Santo")
+st.markdown("### Dados Históricos do cursos Técnicos do IFES")
+
+
 
 def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     modify = st.sidebar.checkbox("Adicionar Filtros")
@@ -78,31 +84,40 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
+df = pd.read_excel("data/cand_vaga_unico.xlsx", sheet_name = 0, dtype={'Semestre': str})
+                        
+df['Candidatos por Vaga'] = (df['Inscritos'] / df['Vagas']).round(2)
 
-
-df = pd.read_excel("data/cand_vaga_unico.xlsx", sheet_name = 0, dtype={'Semestre': str}
-                        )
-df['Candidatos por Vaga'] =(df['Inscritos'] / df['Vagas']).round(2)
 df_editais = pd.read_excel("data/cand_vaga_unico.xlsx", sheet_name= 1, dtype={'Semestre': str})
-df_merged = pd.merge(df, df_editais, on='Semestre', how='inner')
-colunas_editais = ['Semestre', 'Edital', 'Link']  
 
+df_editais['Semestre'] = pd.to_datetime(df_editais['Semestre'])
+df_editais['Semestre'] = df_editais['Semestre'].apply(lambda x: f"{x.year}/{1 if x.month <= 6 else 2}")
 
-st.sidebar.title('Seus filtros estão aqui! ✅')
+# st.dataframe(df_editais)
 
-with st.sidebar:
-    st.write("É possível aplicar quantos filtros quiser")   
-    st.write("Os filtros são as colunas do DataFrame")
+# st.dataframe(df)
 
+# df_merged = pd.merge(df, df_editais, on=['Semestre', 'Curso'], how='left')
+# colunas_editais = ['Semestre', 'Edital', 'Link']  
+# df_merged['Link'] = df_merged['Link'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>')
+
+# st.markdown(df_merged.to_html(escape=False, index=False), unsafe_allow_html=True)
+# Exibindo o DataFrame com links clicáveis
+
+st.sidebar.title('Os filtros estão aqui! ✅')
+
+# with st.expander("Mostrar Dados Filtrados"):
+#     st.markdown(df_merged.to_html(escape=False, index=False), unsafe_allow_html=True)
 
 filtered = filter_dataframe(df)
 with st.expander("Mostrar Dados Filtrados"):
     st.dataframe(filtered)
 
-df_merged = pd.merge(df, df_editais, on='Semestre', how='inner')
-df_editais_selecionado = df_merged[colunas_editais]
-with st.expander("Editais Disponíveis"):
-    st.dataframe(df_merged)
+# df_merged = pd.merge(df, df_editais, on='Semestre', how='inner')
+# df_editais_selecionado = df_merged[colunas_editais]
+# df_merged1 = pd.merge(filtered, df_editais, on='Semestre', how='inner')
+# with st.expander("Editais Disponíveis"):
+#     st.dataframe(df_merged1)
 
 col1, col2, col3, col4 = st.columns(4) 
 col5 = st.columns(1) 
@@ -118,6 +133,20 @@ cadidato_vaga = filtered['Inscritos'].sum() / filtered['Vagas'].sum()
 cores_personalizadas = ['#ffaec8', '#87ceeb']
 
 fig_1 = go.Figure()
+
+# fig_1.add_trace(
+#     go.Indicator(
+#         value=total_inscritos,
+#         gauge={"axis": {"visible": False}},
+#         number={
+#             "font.size": 20,  # Reduzindo o tamanho do número
+#         },
+#         title={
+#             "text": "Total de Inscritos",
+#             "font": {"size": 16},  # Reduzindo o tamanho do título
+#         },
+#     )
+# )
 
 fig_1.add_trace(
     go.Indicator(
@@ -199,13 +228,17 @@ fig_5.update_layout(
 
 fig_6 = go.Figure()
 
-fig_6.add_trace(go.Scatter(x=filtered['Semestre'], y=filtered['Candidatos por Vaga'], mode='lines', fill='tozeroy', name='Candidato por Vaga', text=['Candidato por Vaga']))
+fig_6.add_trace(go.Bar(x=filtered['Semestre'], y=filtered['Candidatos por Vaga'], name='Candidato por Vaga'))
 
 fig_6.update_layout(
     title='Tendência de Candidatos por Vaga',
+    barmode='group',
     xaxis_tickangle=-45,
     # xaxis_title='Semestre',
     # yaxis_title='Quantidade',
+    legend=dict(
+        x=0,
+        y=1.0) 
 )
 
 
@@ -233,41 +266,104 @@ fig_8 = go.Figure()
 fig_8.add_trace(go.Scatter(
     x=filtered['Vagas'],
     y=filtered['Inscritos'],
-    mode='markers',  
+    mode='markers',
     marker=dict(
-        size=filtered['Candidatos por Vaga'],  
-        color=filtered['Candidatos por Vaga'],  
-        colorscale='Viridis',  
-        colorbar=dict(title='Candidatos por Vaga'),  
+        size=filtered['Candidatos por Vaga'] * 5,
+        sizemode='area',
+        sizeref=2.*max(filtered['Candidatos por Vaga'])/(40.**2),
+        color=filtered['Candidatos por Vaga'],
+        colorscale='Viridis',
+        colorbar=dict(title='Candidatos por Vaga')
     ),
-    text=filtered['Semestre'], 
+    text=filtered['Semestre'],
+    customdata=filtered[['Curso']],
+    hovertemplate=
+        '<b>Curso:</b> %{customdata[0]}<br>'+
+        '<b>Semestre:</b> %{text}<br>'+
+        '<b>Inscritos:</b> %{y}<br>'+
+        '<b>Vagas:</b> %{x}<br>'+
+        '<b>Candidatos por Vaga:</b> %{marker.color:.2f}<extra></extra>'
 ))
 
+# Linha de tendência
+z = np.polyfit(filtered['Vagas'], filtered['Inscritos'], 1)
+p = np.poly1d(z)
+fig_8.add_trace(go.Scatter(
+    x=filtered['Vagas'],
+    y=p(filtered['Vagas']),
+    mode='lines',
+    name='Tendência',
+    line=dict(color='red', dash='dash')
+))
 
+# Layout final
 fig_8.update_layout(
     title='Relação entre Inscritos e Vagas Ofertadas por Semestre',
-    # xaxis_title='Vagas Ofertadas',
-    # yaxis_title='Inscritos',
+    xaxis_title='Vagas Ofertadas',
+    yaxis_title='Número de Inscritos',
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    font=dict(size=14)
 )
 
 fig_9 = go.Figure()
 
 
-fig_9.add_trace(go.Scatter(x=filtered['Semestre'], y=filtered['Vagas'], mode='lines+markers', name='Vagas Ofertadas'))
-fig_9.add_trace(go.Scatter(x=filtered['Semestre'], y=filtered['Inscritos'], mode='lines+markers', name='Inscritos'))
+fig_9.add_trace(go.Scatter(
+    x=filtered['Semestre'], 
+    y=filtered['Vagas'], 
+    mode='lines+markers', 
+    name='Vagas Ofertadas',
+    line=dict(color='blue', width=2),
+    marker=dict(size=5)
+))
 
+# Inscritos (linha verde)
+fig_9.add_trace(go.Scatter(
+    x=filtered['Semestre'], 
+    y=filtered['Inscritos'], 
+    mode='lines+markers', 
+    name='Inscritos',
+    line=dict(color='green', width=2),
+    marker=dict(size=5)
+))
 
-fig_9.add_trace(go.Scatter(x=filtered['Semestre'], y=filtered['Candidatos por Vaga'], mode='lines', fill='tozeroy', name='Candidato por Vaga'))
+# Candidatos por Vaga (linha vermelha com eixo secundário)
+fig_9.add_trace(go.Scatter(
+    x=filtered['Semestre'], 
+    y=filtered['Candidatos por Vaga'], 
+    mode='lines+markers', 
+    name='Candidatos por Vaga',
+    line=dict(color='red', width=2, dash='dot'),
+    yaxis='y2',  # Define que essa série usa o eixo secundário
+    marker=dict(size=5)
+))
 
-
+# Configuração do layout
 fig_9.update_layout(
-    title='Tendência das Vagas Ofertadas, Inscritos e Candidato por Vaga',
-    # xaxis_title='Semestre',
-    # yaxis_title='Quantidade',
-    xaxis_tickangle=-45,
+    title='Tendência das Vagas Ofertadas, Inscritos e Candidatos por Vaga',
+    xaxis=dict(
+        title='Semestre',
+        tickangle=-45
+    ),
+    yaxis=dict(
+        title='Vagas e Inscritos'
+    ),
+    yaxis2=dict(
+        title='Candidatos por Vaga',
+        overlaying='y',
+        side='right',
+        showgrid=False  # Remove grid do eixo secundário
+    ),
     legend=dict(
-        x=0,
-        y=1.0) 
+        x=0.01,
+        y=0.99,
+        bgcolor='rgba(255,255,255,0.5)',
+        bordercolor='black',
+        borderwidth=1
+    ),
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)'
 )
 
 col1.plotly_chart(fig_1, use_container_width=True)
