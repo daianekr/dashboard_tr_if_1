@@ -1,6 +1,7 @@
 [server]
 runOnSave = true
 
+
 [theme]
-base="dark"
-primaryColor="purple"
+base="light"
+primaryColor = "#ADD8E6"

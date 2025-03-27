@@ -11,7 +11,13 @@ import plotly.graph_objs as go
 from streamlit_dynamic_filters import DynamicFilters
 from streamlit_card import card
 
-st.set_page_config(page_title="Dados Graduação", page_icon=":bar_chart:", layout="wide")
+st.set_page_config(
+    page_title="Dados Graduação", 
+    page_icon=":bar_chart:", 
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
 st.markdown("# Dados Graduação")
 st.sidebar.markdown("# Dados Graduação")
 
